@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch | Prodigy Infotech - Task 02</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #ffd700;
+    }
+
+    .stopwatch {
+      font-size: 4rem;
+      margin: 20px 0;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .controls button:hover {
+      opacity: 0.8;
+    }
+
+    .start { background: #28a745; color: #fff; }
+    .pause { background: #ffc107; color: #000; }
+    .reset { background: #dc3545; color: #fff; }
+    .lap { background: #007bff; color: #fff; }
+
+    .laps {
+      margin-top: 20px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .lap-item {
+      border-bottom: 1px solid #444;
+      padding: 5px 0;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Stopwatch</h1>
+  <p>Web Application - Comillas Negras</p>
+  <h2>Task-02 | Prodigy Infotech</h2>
+
+  <div class="stopwatch" id="display">00:00:00</div>
+
+  <div class="controls">
+    <button class="start" onclick="startStopwatch()">Start</button>
+    <button class="pause" onclick="pauseStopwatch()">Pause</button>
+    <button class="reset" onclick="resetStopwatch()">Reset</button>
+    <button class="lap" onclick="recordLap()">Lap</button>
+  </div>
+
+  <div class="laps" id="laps"></div>
+
+  <footer>© 2025 Prodigy Infotech - Task 02</footer>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+    let isRunning = false;
+
+    function updateDisplay() {
+      const time = Date.now() - startTime + elapsedTime;
+      const date = new Date(time);
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+      const milliseconds = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0');
+      document.getElementById('display').textContent = `${minutes}:${seconds}:${milliseconds}`;
+    }
+
+    function startStopwatch() {
+      if (!isRunning) {
+        startTime = Date.now();
+        timerInterval = setInterval(updateDisplay, 10);
+        isRunning = true;
+      }
+    }
+
+    function pauseStopwatch() {
+      if (isRunning) {
+        elapsedTime += Date.now() - startTime;
+        clearInterval(timerInterval);
+        isRunning = false;
+      }
+    }
+
+    function resetStopwatch() {
+      clearInterval(timerInterval);
+      document.getElementById('display').textContent = "00:00:00";
+      document.getElementById('laps').innerHTML = "";
+      elapsedTime = 0;
+      isRunning = false;
+    }
+
+    function recordLap() {
+      if (isRunning) {
+        const lapTime = document.getElementById('display').textContent;
+        const lapList = document.getElementById('laps');
+        const lapItem = document.createElement('div');
+        lapItem.className = 'lap-item';
+        lapItem.textContent = `Lap ${lapList.children.length + 1}: ${lapTime}`;
+        lapList.appendChild(lapItem);
+      }
+    }
+  </script>
+
+</body>
+</html>
